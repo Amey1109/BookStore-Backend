@@ -50,6 +50,6 @@ def check_otp(request):
 
         data.is_verfied = True
         data.save()
-        return Response({"status": True})
+        return Response({"checkStatus": True})
     else:
-        return Response({"status": False})
+        return Response({"checkStatus": False})
