@@ -1,4 +1,5 @@
 from django.db import models
+
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 
@@ -21,8 +22,17 @@ class Customer(AbstractUser):
     USERNAME_FIELD = 'email'   # uses Email  feild to Login
     REQUIRED_FIELDS = ['username']
 
+# OTP Model for Verifiaction Purpose
+
 
 class OTP(models.Model):
     phone_number = models.IntegerField()
     otp = models.CharField(max_length=4)
     is_verfied = models.BooleanField(default=False)
+
+# Address Model for storing multiple address of the user
+
+
+class Address(models.Model):
+    customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    address = models.TextField()
