@@ -1,5 +1,11 @@
 from django.urls import path, include
 from accounts import views
+
+from rest_framework_simplejwt.views import(
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView
+)
 urlpatterns = [
     path('generate_otp/', views.generate_otp),  # Generates the OTP
     path('check_otp/', views.check_otp),  # Checks the OTP Generated OTP
@@ -18,6 +24,11 @@ urlpatterns = [
 
      # User change password 
     path('change_password/', views.change_password),
+
+    path('token/', TokenObtainPairView.as_view(), name= 'token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+   
 
      # forget password link without login
     path('Sendemail/', views.Sendemail),

@@ -257,31 +257,13 @@ def customer_login(request):
 def change_password(request):
     
     id = request.data['id']
-
     customer_object = Customer.objects.get(id = id)
     customer_object.set_password(request.data['new_password'])
     customer_object.save()
     try:
         return Response({'msg':'password update Successfully'})
-    except Exception as e:
-        print(str(e))
-
-
-
-
-    # if change_password.check_password():
-    # change_password.set_password(request.data["new_password"])
-    # change_password.save()
-    # return Response({"msg":'password change successfully'})
-    # else:
-    #     return Response({"msg": "please enter correct password"})       
-
-
-    # password = request.data["password"]
-    # customer_object = Customer.objects.get(password = password)
-    # customer_object.set_password(request.data['new_password'])
-    # customer_object.save
-    # return Response({"staus":"password updated"})
+    except customer_object.DoesNotExist as e:
+         return Response({"status": False, "Error ": "Customer does not exist"})
 
 
 @api_view(['POST'])
