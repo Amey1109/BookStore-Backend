@@ -126,3 +126,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'accounts.Customer'
+
+RESETPASSWORD_URL = "http://localhost:3000"
