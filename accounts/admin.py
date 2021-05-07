@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Customer, OTP
+from . models import Customer, OTP, Address
 from .forms import CustomerCreationForm
 from django.contrib.auth.admin import UserAdmin
 
@@ -27,5 +27,10 @@ class OTPAdmin(admin.ModelAdmin):
     list_display = ("id", "phone_number", "otp", "is_verfied")
 
 
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ("id", "customer_id", "address")
+
+
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(OTP, OTPAdmin)
+admin.site.register(Address, AddressAdmin)

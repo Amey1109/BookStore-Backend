@@ -4,10 +4,13 @@ from django.shortcuts import render
 from django.db import IntegrityError
 
 
-from .models import Customer, OTP
+from .models import Customer, OTP, Address
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+
+from .serializers import AddressSerializer
 
 
 # Generates the OTP and sends to the mobile number
@@ -222,3 +225,63 @@ def update_customer(request):
     except Customer.DoesNotExist as e:
 
         return Response({"status": False, "Error ": "Customer does not exist"})
+
+
+@api_view(['POST'])
+def add_address(request):
+    if 'customer_id' in request.data:
+        customer_id = request.data['customer_id']
+    else:
+        return Response({"Error": "Expected 'Customer ID' "})
+
+    if 'address' in request.data:
+        address = request.data['address']
+    else:
+        return Response({"Error": "Expected 'Address' "})
+
+    serializer_object = AddressSerializer(data=request.data)
+    if serializer_object.is_valid():
+        serializer_object.save()
+        return Response({"status": True, "message": "Address added successfully"})
+    else:
+        return Response(serializer_object.errors)
+
+
+@api_view(['PUT'])
+def update_address(request):
+
+    if 'id' in request.data:
+        id = request.data['id']
+    else:
+        return Response({"Error": "Expected 'Address ID' "})
+
+    if 'customer_id' in request.data:
+        customer_id = request.data['customer_id']
+    else:
+        return Response({"Error": "Expected 'Customer ID' "})
+
+    if 'address' in request.data:
+        address = request.data['address']
+    else:
+        return Response({"Error": "Expected 'Address' "})
+
+    try:
+        address_to_be_updated = Address.objects.get(id=id)
+        serializer_object = AddressSerializer(
+            address_to_be_updated, request.data)
+        if serializer_object.is_valid():
+            serializer_object.save()
+            return Response({"status": True, "message": "Address updated successfully"})
+        else:
+            return Response(serializer_object.errors)
+
+    except Address.DoesNotExist as e:
+        return Response({"status": false, "message": "Address does not exist"})
+
+
+@api_view(["GET"])
+def get_address(request, id):
+    try:
+        query_set = Address.objects.get(customer_id=id)
+    except Customer.DoesNotExist as e:
+        return Response({"status": false, "message": "Address does not exist"})
