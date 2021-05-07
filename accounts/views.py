@@ -282,5 +282,11 @@ def update_address(request):
 @api_view(["GET"])
 def get_address(request, id):
     try:
-        query_set = Address.objects.get(customer_id=id)
-    except Customer.DoesNotExist as 
+        query_set = Address.objects.filter(customer_id=id)
+        if query_set:
+            serializer_object = AddressSerializer(query_set, many=True)
+            return Response({"Address": serializer_object.data, "status": True, "message": "Address Exists"})
+        else:
+            return Response({"status": False, "message": "Address does not exist for the requested user"})
+    except Customer.DoesNotExist as e:
+        return Response({"status": false, "message": "Customer does not exist"})

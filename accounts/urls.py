@@ -17,5 +17,4 @@ urlpatterns = [
     path('update_address/', views.update_address), #update the existing address
     path('get_address/<int:id>', views.get_address),# get all the address related to the particular customer
 
-
 ]
