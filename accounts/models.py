@@ -32,7 +32,6 @@ class OTP(models.Model):
 
 # Address Model for storing multiple address of the user
 
-
 class Address(models.Model):
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
     address = models.TextField()

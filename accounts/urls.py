@@ -19,14 +19,12 @@ urlpatterns = [
     # Updates the registered customers
     path('update_customer/', views.update_customer),
 
-<<<<<<< HEAD
+
     path('add_address/', views.add_address), #add an address
     path('update_address/', views.update_address), #update the existing address
     path('get_address/<int:id>', views.get_address),# get all the address related to the particular customer
 
-<<<<<<< HEAD
 
-=======
     # Admin and Customer Login
     path('customer_login/', views.customer_login),
 
@@ -39,11 +37,9 @@ urlpatterns = [
    
 
      # forget password link without login
-    path('Sendemail/', views.Sendemail),
+    path('send_email/', views.Sendemail),
 
     # reset password through email
     path('password_reset/', views.password_reset),
->>>>>>> authentication
-=======
->>>>>>> b53cc7646bd38ebbcb395a336288f94f60d4dca7
+
 ]

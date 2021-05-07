@@ -1,34 +1,25 @@
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
+from hashids import Hashids
+import smtplib
+from .models import Customer, OTP
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from .serializers import AddressSerializer
+from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Customer, OTP, Address
 from . utils.otp_utils import generateOTP, generatingOTP
 from django.conf import settings
 
 from django.shortcuts import render
 from django.db import IntegrityError
 
-
-<<<<<<< HEAD
-from .models import Customer, OTP, Address
-
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
-
-from .serializers import AddressSerializer
-=======
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from .models import Customer, OTP
-import smtplib
-from hashids import Hashids
-
-
-from rest_framework.response import Response
-from rest_framework.decorators import api_view,permission_classes
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated
->>>>>>> authentication
-
-
 # Generates the OTP and sends to the mobile number
+
+
 @api_view(['POST'])
 def generate_otp(request):
     if 'number' in request.data:  # Checks whether the nuber is present in the request body
@@ -241,7 +232,6 @@ def update_customer(request):
 
         return Response({"status": False, "Error ": "Customer does not exist"})
 
-<<<<<<< HEAD
 
 @api_view(['POST'])
 def add_address(request):
@@ -298,104 +288,104 @@ def update_address(request):
 @api_view(["GET"])
 def get_address(request, id):
     try:
-<<<<<<< HEAD
-        query_set = Address.objects.get(customer_id=id)
+        query_set = Address.objects.filter(customer_id=id)
+        serializer_object = AddressSerializer(query_set, many=True)
+        if query_set:
+            return Response(serializer_object.data)
+        else:
+            return Response({"status":False,"message":"Address does not exist for user"})
     except Customer.DoesNotExist as e:
-        return Response({"status": false, "message": "Address does not exist"})
-=======
+        return Response({"status": false, "message": "Customer does not exist"})
+
+
 @api_view(['POST'])
 def customer_login(request):
-    email    = request.data["email"]
+    email = request.data["email"]
     password = request.data["password"]
-    customer = Customer.objects.get(email = email)  #it will  match customer email address from Table
+    # it will  match customer email address from Table
+    customer = Customer.objects.get(email=email)
 
     if customer.is_superuser:
-        if customer.check_password(password):          #check password from table and assign a session or auth_token. 
+        # check password from table and assign a session or auth_token.
+        if customer.check_password(password):
             refresh = RefreshToken.for_user(customer)
-            return Response({"status": True, "is_admin":True, "refresh":str(refresh), "access": str(refresh.access_token), "loggedIn": str(customer.username), "id": customer.pk})
+            return Response({"status": True, "is_admin": True, "refresh": str(refresh), "access": str(refresh.access_token), "loggedIn": str(customer.username), "id": customer.pk})
         else:
-            return Response({"status":False})
+            return Response({"status": False})
 
     else:
-        if customer.check_password(password):          #check password from table and assign a session or auth_token. 
+        # check password from table and assign a session or auth_token.
+        if customer.check_password(password):
             refresh = RefreshToken.for_user(customer)
-            return Response({"status": True, "is_admin":False, "refresh":str(refresh),"access": str(refresh.access_token), "loggedIn": str(customer.username), "id": customer.pk})
+            return Response({"status": True, "is_admin": False, "refresh": str(refresh), "access": str(refresh.access_token), "loggedIn": str(customer.username), "id": customer.pk})
         else:
-            return Response({"status":False})
-   
+            return Response({"status": False})
+
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def change_password(request):
-    
+
     id = request.data['id']
-    customer_object = Customer.objects.get(id = id)
+    customer_object = Customer.objects.get(id=id)
     customer_object.set_password(request.data['new_password'])
     customer_object.save()
     try:
-        return Response({'msg':'password update Successfully'})
+        return Response({'msg': 'password update Successfully'})
     except customer_object.DoesNotExist as e:
-         return Response({"status": False, "Error ": "Customer does not exist"})
+        return Response({"status": False, "Error ": "Customer does not exist"})
 
 
 @api_view(['POST'])
 def Sendemail(request):
-    user_email = Customer.objects.filter(email = request.data['email']).values_list('email')
+    user_email = Customer.objects.filter(
+        email=request.data['email']).values_list('email')
     if user_email.exists():
         sender_email = "gingertestuser1245@gmail.com"
         rec_email = user_email[0][0]
         password = "stoxvnvworbwyxcs"
-        user_id = Customer.objects.filter(email = request.data['email']).values_list('id')
+        user_id = Customer.objects.filter(
+            email=request.data['email']).values_list('id')
         gen_id = user_id[0][0]
         hashids = Hashids()
-        encrypted_User_id= hashids.encode(gen_id)
+        encrypted_User_id = hashids.encode(gen_id)
         msg = MIMEMultipart('alternative')
-        frontend_url =  settings.RESETPASSWORD_URL +"/ResetPassword"
+        frontend_url = settings.RESETPASSWORD_URL + "/ResetPassword"
         text = "Hi!\nHow are you?\nHere is the link you wanted:"
-        html = '<html> <head></head> <body><p>Hi!<br> How are you?<br> Here is the  <a href="{0}/{1}">http://localhost:3000/Resetpassword</a> you wanted.</p></body></html>'.format(frontend_url, encrypted_User_id)
+        html = '<html> <head></head> <body><p>Hi!<br> How are you?<br> Here is the  <a href="{0}/{1}">http://localhost:3000/Resetpassword</a> you wanted.</p></body></html>'.format(
+            frontend_url, encrypted_User_id)
         part1 = MIMEText(text, 'plain')
         part2 = MIMEText(html, 'html')
 
         msg.attach(part1)
         msg.attach(part2)
-      
+
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(sender_email, password)
-       
-        
+
         server.sendmail(sender_email, rec_email, msg.as_string())
         server.quit()
 
-        return Response({'msg':'email sent','email':encrypted_User_id})
+        return Response({'msg': 'email sent', 'email': encrypted_User_id})
     else:
-        return Response({'msg':'invalid email!'})
+        return Response({'msg': 'invalid email!'})
+
 
 @api_view(['PUT'])
-def password_reset(request,id):
+def password_reset(request, id):
     hashids = Hashids()
     dec_id = hashids.decode(id)
     decrypted_id = dec_id[0]
     print(decrypted_id)
-    person = Customer.objects.get(id = decrypted_id)
+    person = Customer.objects.get(id=decrypted_id)
     person.set_password(request.data['password'])
     person.save()
     try:
-        return Response({'msg':'password update Successfully','id':decrypted_id})
+        return Response({'msg': 'password update Successfully', 'id': decrypted_id})
     except Exception as e:
         print(str(e))
 
-     
-    
-        
-
-
-
-
-
-
->>>>>>> authentication
-=======
         query_set = Address.objects.filter(customer_id=id)
         if query_set:
             serializer_object = AddressSerializer(query_set, many=True)
@@ -404,4 +394,3 @@ def password_reset(request,id):
             return Response({"status": False, "message": "Address does not exist for the requested user"})
     except Customer.DoesNotExist as e:
         return Response({"status": false, "message": "Customer does not exist"})
->>>>>>> b53cc7646bd38ebbcb395a336288f94f60d4dca7
