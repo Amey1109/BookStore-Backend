@@ -24,6 +24,7 @@ urlpatterns = [
     path('update_address/', views.update_address), #update the existing address
     path('get_address/<int:id>', views.get_address),# get all the address related to the particular customer
 
+<<<<<<< HEAD
 
 =======
     # Admin and Customer Login
@@ -43,4 +44,6 @@ urlpatterns = [
     # reset password through email
     path('password_reset/', views.password_reset),
 >>>>>>> authentication
+=======
+>>>>>>> b53cc7646bd38ebbcb395a336288f94f60d4dca7
 ]
