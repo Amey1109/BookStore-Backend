@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # Apps
     'accounts',
+    'products',
 
     # Framework,
     'rest_framework',
@@ -135,4 +136,3 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-

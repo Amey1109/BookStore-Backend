@@ -337,7 +337,7 @@ def change_password(request):
 
 
 @api_view(['POST'])
-def Sendemail(request):
+def send_email(request):
     user_email = Customer.objects.filter(
         email=request.data['email']).values_list('email')
     if user_email.exists():
