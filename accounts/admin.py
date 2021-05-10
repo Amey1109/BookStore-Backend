@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Customer, OTP, Address
+from . models import Customer, OTP, Address,Coupon
 from .forms import CustomerCreationForm
 from django.contrib.auth.admin import UserAdmin
 
@@ -30,7 +30,11 @@ class OTPAdmin(admin.ModelAdmin):
 class AddressAdmin(admin.ModelAdmin):
     list_display = ("id", "customer_id", "address")
 
+class CouponAdmin(admin.ModelAdmin):
+    list_display = ("id","code","discount")
+
 
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(OTP, OTPAdmin)
 admin.site.register(Address, AddressAdmin)
+admin.site.register(Coupon, CouponAdmin)

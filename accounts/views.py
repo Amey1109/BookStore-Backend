@@ -3,14 +3,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from hashids import Hashids
 import smtplib
-from .models import Customer, OTP
+from .models import Customer, OTP,Coupon
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from .serializers import AddressSerializer
+from .serializers import AddressSerializer,CouponSerializer
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Customer, OTP, Address
+from .models import Customer, OTP, Address,Coupon
 from . utils.otp_utils import generateOTP, generatingOTP
 from django.conf import settings
 
@@ -394,3 +394,11 @@ def password_reset(request, id):
             return Response({"status": False, "message": "Address does not exist for the requested user"})
     except Customer.DoesNotExist as e:
         return Response({"status": false, "message": "Customer does not exist"})
+
+@api_view(['POST'])
+def get_coupon(request):
+        code = request.data['code']
+        user_objects = Coupon.objects.filter(code=code)
+        serializer_object = CouponSerializer(user_objects, many=True)
+        return Response(serializer_object.data)
+    #
