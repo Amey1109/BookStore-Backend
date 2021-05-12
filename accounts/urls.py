@@ -39,6 +39,10 @@ urlpatterns = [
      # forget password link without login
     path('send_email/', views.Sendemail),
 
+    
+    # forget password link without login
+    path('coupon/', views.get_coupon),
+
     # reset password through email
     path('password_reset/', views.password_reset),
 
