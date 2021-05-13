@@ -37,7 +37,7 @@ urlpatterns = [
    
 
      # forget password link without login
-    path('send_email/', views.Sendemail),
+    path('send_email/', views.send_email),
 
     
     # forget password link without login
