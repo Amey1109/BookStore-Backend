@@ -1,4 +1,5 @@
 from django.db import models
+from accounts.models import Customer
 
 # Create your models here.
 class Category(models.Model):
@@ -15,3 +16,28 @@ class Products(models.Model):
 
     def __str__(self):
             return self.product_name
+
+##Cart Related Stuff
+class Cart(models.Model):
+    user_id  = models.ForeignKey(Customer, on_delete=models.CASCADE, default=1)
+    products = models.ManyToManyField(Products, through='CartProduct')
+
+    def __str__(self):
+        return self.user_id.username
+
+class CartProduct(models.Model):
+    user = models.ForeignKey(Customer, on_delete=models.CASCADE, default=1)
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username + self.product.product_name 
+
+# Discount Coupon for user
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    discount = models.FloatField(max_length=15) 
+
+    def __str__(self):
+        return self.code

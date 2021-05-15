@@ -36,11 +36,8 @@ class Address(models.Model):
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
     address = models.TextField()
 
-# Discount Coupon for user
+# Pincode model for order Details
+class Pincode(models.Model):
+    pincode = models.CharField(max_length=50, unique=True)
+    
 
-class Coupon(models.Model):
-    code = models.CharField(max_length=50, unique=True)
-    discount = models.FloatField(max_length=15) 
-
-    def __str__(self):
-        return self.code
