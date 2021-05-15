@@ -1,5 +1,5 @@
 from .models import Address
-from .models import Coupon
+from .models import Pincode
 from rest_framework import serializers
 
 
@@ -9,7 +9,9 @@ class AddressSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CouponSerializer(serializers.ModelSerializer):
+
+
+class PincodeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Coupon
+        model = Pincode
         fields = '__all__'

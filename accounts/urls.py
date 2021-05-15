@@ -37,13 +37,25 @@ urlpatterns = [
    
 
      # forget password link without login
-    path('send_email/', views.Sendemail),
+    path('send_email/', views.send_email),
 
     
-    # forget password link without login
-    path('coupon/', views.get_coupon),
+   
 
     # reset password through email
     path('password_reset/', views.password_reset),
+    
+     # insert Pincode
+    path('post_Pincode/', views.post_Pincode),
 
+     # get pincode
+    path('get_Pincode/', views.get_Pincode),
+
+     # delete pincode
+    path('delete_Pincode/', views.delete_Pincode),
+
+    # update pincode
+    path('update_Pincode/', views.update_Pincode),
+
+    #
 ]

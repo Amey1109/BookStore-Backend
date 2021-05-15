@@ -3,14 +3,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from hashids import Hashids
 import smtplib
-from .models import Customer, OTP,Coupon
+from .models import Customer, OTP
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from .serializers import AddressSerializer,CouponSerializer
+from .serializers import AddressSerializer,PincodeSerializer
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Customer, OTP, Address,Coupon
+from .models import Customer, OTP, Address,Pincode
 from . utils.otp_utils import generateOTP, generatingOTP
 from django.conf import settings
 
@@ -395,10 +395,49 @@ def password_reset(request, id):
     except Customer.DoesNotExist as e:
         return Response({"status": false, "message": "Customer does not exist"})
 
+
+
+
+##pincode functionality
+@api_view(['GET'])
+def get_Pincode(request):
+    query_set = Pincode.objects.all()
+    serializer_object = PincodeSerializer(query_set, many=True)
+
+    return Response(serializer_object.data)
+
+
+@api_view(['DELETE'])
+def delete_Pincode(request):
+    id = request.data["id"]
+
+    updated_Category = Pincode.objects.get(id = id)
+
+    updated_Category.delete()
+    return Response({"msg":"deleted successfully"})
+
 @api_view(['POST'])
-def get_coupon(request):
-        code = request.data['code']
-        user_objects = Coupon.objects.filter(code=code)
-        serializer_object = CouponSerializer(user_objects, many=True)
-        return Response(serializer_object.data)
-    #
+def post_Pincode(request):
+        new_pincode =  request.data
+        serializer_object = PincodeSerializer(data = new_pincode)
+        
+        if serializer_object.is_valid():
+            serializer_object.save()
+            return Response({"message":"post successfully"})
+        else:
+            return Response(serializer_object.errors)
+
+@api_view(['PUT'])
+def update_Pincode(request):
+        updated_pincode = Pincode.objects.get(id=request.data["id"])
+        serializer_object = PincodeSerializer(updated_pincode, request.data)
+
+        if serializer_object.is_valid():
+            serializer_object.save()
+            return Response({"mesage":"data updated successfully"})
+        else:
+            return Response(serializer_object.errors)
+
+
+
+    
