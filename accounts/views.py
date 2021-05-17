@@ -399,13 +399,21 @@ def password_reset(request, id):
 
 
 ##pincode functionality
-@api_view(['GET'])
+@api_view(['PUT'])
 def get_Pincode(request):
-    query_set = Pincode.objects.all()
-    serializer_object = PincodeSerializer(query_set, many=True)
+    if 'pincode' in request.data:
+          pincode = request.data['pincode']
+    else:
+      return Response({"Error": "pincode is not provided"})
+    
+    if 'generatedpincode':
+        generatedpincode = Pincode.objects.get(pincode = pincode)
 
-    return Response(serializer_object.data)
-
+        generatedpincode.is_verified =True
+        generatedpincode.save()
+        return Response({"True": "we deliver our goodies on this pincode"})
+    else:
+        return Response({"False": "sorry we couldnt deliver our goodies on this Pincode "})
 
 @api_view(['DELETE'])
 def delete_Pincode(request):

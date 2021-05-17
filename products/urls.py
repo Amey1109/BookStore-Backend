@@ -25,6 +25,16 @@ urlpatterns = [
 
      # forget password link without login
     path('coupon/', views.get_coupon),
+
+    #Customer Order Path
+    path('place_order/', views.place_order),
+
+    path('complete_order/', views.complete_order),
+
+    path('get_order_details/', views.get_order_details),
+
+
+
     
     
 ]

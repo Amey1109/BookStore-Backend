@@ -1,5 +1,7 @@
 from django.db import models
 from accounts.models import Customer
+from datetime import date
+import datetime as DT
 
 # Create your models here.
 class Category(models.Model):
@@ -41,3 +43,25 @@ class Coupon(models.Model):
 
     def __str__(self):
         return self.code
+
+#Customer Order table
+
+class Order(models.Model):
+    PAYMENT_METHODS = (
+        ("ONLINE_PAY", "Online Payment"),
+        ("COD_PAY", "Cash Payment"),
+    )
+
+    order_placed_by = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    total_products = models.IntegerField(default=0)
+    order_total = models.IntegerField(default=100)
+    order_price = models.IntegerField(default=100)
+    payment_mode = models.CharField(
+        null=False, choices=PAYMENT_METHODS, max_length=30, default='Cash Payment')
+    products = models.TextField(default="")
+    address = models.CharField(max_length=20, default="")
+    order_completed = models.BooleanField(default=False)
+    date_of_ordering = models.DateField(default=date.today)
+    date_of_delivery = models.DateField(
+    default=DT.date.today() + DT.timedelta(days=7))
+
