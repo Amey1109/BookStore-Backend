@@ -189,7 +189,8 @@ def place_order(request):
     
     total_price = order_total - ((order_total / 100 ) * applied_coupon.discount)
     order_price = total_price
-    order_price.save()
+    print(order_price)
+    # order_price.save()
 
     user_instance = Customer.objects.get(id=request.data['id'])
     order = Order(order_placed_by=user_instance,
@@ -237,7 +238,7 @@ def get_order_details(request):
             "order_id": order.id,
             "ordered_products": order.products,
             "total_products": order.total_products,
-            "order_price": order.order_price,
+            "order_price": order.order_total,
             "date_of_ordering": order.date_of_ordering,
             "date_of_delivery": order.date_of_delivery,
             "address":order.address,
