@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Products, Category, CartProduct, Cart, Coupon
+from .models import Products, Category, CartProduct, Cart, Coupon, Order
 
 # Register your models here.
 
@@ -23,3 +23,4 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(CartProduct, CartProductAdmin)
 admin.site.register(Cart)
 admin.site.register(Coupon,CouponAdmin)
+admin.site.register(Order)
